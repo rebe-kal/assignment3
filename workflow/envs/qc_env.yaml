@@ -1,0 +1,10 @@
+name: qc_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - python==3.11
+  - FastQC==0.12.0
+  - Trimmomatic==0.39
