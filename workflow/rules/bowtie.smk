@@ -9,14 +9,14 @@ rule indexReference:
         "../envs/bowtie2_env.yaml"
     threads: 4
     log: 
-        "results/logs/bowtie2_index.log"
+        "results/logs/bowtie2_index/bowtie2_index.log"
     shell:
         "bowtie2-build --threads {threads} {input.ref} {params.index_base} 2> {log}"
 
 rule pairEnd:
     input:
-        fq1 = lambda wildcards: fq1[wildcards.sample],
-        fq2 = lambda wildcards: fq2[wildcards.sample],
+        fq1 = "results/trimmed/{sample}_1_trimmed.fastq", 
+        fq2 = "results/trimmed/{sample}_2_trimmed.fastq",  
         index = multiext("results/index/genome", ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2", ".rev.1.bt2", ".rev.2.bt2")
     output:
         temp(ensure(
@@ -36,8 +36,7 @@ rule pairEnd:
         R = config["bowtie2_params"]["R"]
     shell:
         """
-        bowtie2 -p \
-            --threads {threads} \
+        bowtie2 --threads {threads} \
             -x {params.index_prefix} \
             -1 {input.fq1} -2 {input.fq2} \
             -S {output} \
