@@ -30,7 +30,7 @@ rule processReads:
     input:
         fq1 = lambda wc: fq1_dict[wc.sample],
         fq2 = lambda wc: fq2_dict[wc.sample],
-        adapters = "resources/TruSeq3-PE.fa"
+        adapters = config["trim_params"]["adapter"]
     output:
         f_p = "results/trimmed/{sample}_1_trimmed.fastq", 
         f_un = "results/trimmed/{sample}_1_unpaired_trimmed.fastq", 
@@ -41,9 +41,16 @@ rule processReads:
     log:
         "results/logs/trimmomatic/{sample}.log"
     threads: 4
+    params:
+        phred = config["trim_params"]["phred"],
+        vp_TF = config["trim_params"]["validatePairs"],
+        validatePairs = lambda wc: "-validatePairs" if params.vp_TF else "",
+        q_TF = config["trim_params"]["quiet"],
+        quiet = lambda wc: "-quiet" if params.q_TF else ""
     shell:
         """
         trimmomatic PE -threads {threads} \
+        -{params.phred} {params.validatePairs} {params.quiet} \
         {input.fq1} {input.fq2} \
         {output.f_p} {output.f_un} \
         {output.r_p} {output.r_un} \
