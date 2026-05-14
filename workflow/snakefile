@@ -1,0 +1,24 @@
+import os
+import pandas as pd
+
+from snakemake.io import glob_wildcards
+
+configfile: "config/config.yaml"
+
+samples_df = pd.read_csv(config["samples"],sep="\t",skipinitialspace=True)
+print(samples_df)
+
+SAMPLES = samples_df["sample"].tolist()
+
+fq1 = dict(zip(samples_df["sample"], samples_df["fq1"]))
+fq2 = dict(zip(samples_df["sample"], samples_df["fq2"]))
+
+print(f"SAMPLES:{SAMPLES}")
+
+include: "rules/bowtie.smk"
+include: "rules/samtools.smk"
+
+rule all:
+    input:
+        expand("results/stats/{sample}.txt", sample=SAMPLES),
+        expand("results/filtered/{sample}_filtered.bam", sample=SAMPLES)

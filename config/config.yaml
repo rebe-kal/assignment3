@@ -1,0 +1,10 @@
+read_dir: "results/"
+ref: "resources/reference.fa"
+samples: "resources/samples.tsv"
+
+#Bowtie2 parameters
+bowtie2_params:
+  N: 1 #mas number of mismatches in seed alignments (default: 0)
+  L: 30 #length of seed substrings (default: 22)
+  D: 15 #give up extending after <int> failed extends in a row (defaults: 15)
+  R: 2 #for reads w/ repetitive seeds, try <int> sets of seeds (default:)
