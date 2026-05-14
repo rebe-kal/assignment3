@@ -6,4 +6,3 @@ channels:
 
 dependencies:
   - samtools==1.23.1
-  - pandas==2.2
