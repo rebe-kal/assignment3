@@ -43,7 +43,7 @@ rule processReads:
     threads: 4
     shell:
         """
-        trimmomatic PE \
+        trimmomatic PE -threads {threads} \
         {input.fq1} {input.fq2} \
         {output.f_p} {output.f_un} \
         {output.r_p} {output.r_un} \
@@ -81,15 +81,19 @@ rule processedFastQC_R2:
 
 rule qualimapStats:
     input:
-        "results/bam/{sample}.bam"
+        "results/bam_sorted/{sample}_sorted.bam"
     output:
-        "results/quality_control/qualimapStats/{sample}_qualimap_stats"
+        directory("results/quality_control/qualimapStats/{sample}_qualimap_stats")
     conda:
-        "../envs/samtools_env.yaml"
+        "../envs/qc_env.yaml"
     log:
-        "results/logs/qualimapStats/{sample}.html"
+        "results/logs/qualimapStats/{sample}.log"
     shell:
-        "qualimap bamqc -bam {input} -outdir results/qualimapStats -pe 2> {log}"
+        """
+        qualimap bamqc -bam {input} \
+        -outdir {output} \
+        -pe 2> {log}
+        """
 
 rule aggregateQC:
     input:
