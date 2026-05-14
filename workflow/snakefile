@@ -15,14 +15,15 @@ fq2_dict = dict(zip(samples_df["sample"], samples_df["fq2"]))
 
 print(f"SAMPLES:{SAMPLES}")
 
+print("Sample fq1 dictionary keys:", list(fq1_dict.keys()))
+print("Sample ERR024604:", fq1_dict.get("ERR024604", "MISSING"))
+
 include: "rules/bowtie.smk"
 include: "rules/samtools.smk"
 include: "rules/qc.smk"
 
 rule all:
     input:
-        #expand("results/stats/{sample}.txt", sample=SAMPLES),
-        #expand("results/filtered/{sample}_filtered.bam", sample=SAMPLES),
-        #expand("{sample}_fastqc.done", sample=SAMPLES)
-        expand("results/fastQC/raw/{sample}_{read}_raw_fastqc.{ext}", sample=SAMPLES, read=["1","2"], ext=["html", "zip"]),
-        expand("results/fastQC/trimmed/{sample}_{read}_trimmed_fastqc.{ext}", sample=SAMPLES, read=["1","2"], ext=["html", "zip"])
+        expand("results/stats/{sample}.txt", sample=SAMPLES),
+        expand("results/filtered/{sample}_filtered.bam", sample=SAMPLES),
+        "results/quality_control/aggregated/quality_control_aggregated.html"
