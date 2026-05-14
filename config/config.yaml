@@ -8,3 +8,10 @@ bowtie2_params:
   L: 30 #length of seed substrings (default: 22)
   D: 15 #give up extending after <int> failed extends in a row (defaults: 15)
   R: 2 #for reads w/ repetitive seeds, try <int> sets of seeds (default:)
+
+#trimmomatic parameters
+trim_params:
+  adapter : "resources/TruSeq3-PE.fa"
+  phred : "phred33"
+  validatePairs : False
+  quiet : False
